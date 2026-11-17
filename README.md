@@ -1,6 +1,6 @@
 # Generic chaining in Lean
 
-[Read the four-page mathematical report](docs/REPORT.pdf) · [LaTeX source](docs/REPORT.tex) · [Exact Lean statements](https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/CHECKED_THEOREMS.md) · [Audited proof revision](https://github.com/VC2015/generic-chaining/tree/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc)
+[Read the mathematical report with numbered theorems and lemmas](docs/REPORT.pdf) · [LaTeX source](docs/REPORT.tex) · [Lean checks for the numbered statements](docs/ReportStatements.lean) · [Exact Lean statements](https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/CHECKED_THEOREMS.md) · [Audited proof revision](https://github.com/VC2015/generic-chaining/tree/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc)
 
 The report is by GPT-Sol 6.2, prompted by Victor Chernozhukov. It explains how the constructions fit together and identifies precisely which results of Dirksen, Talagrand, and van Handel they implement.
 
