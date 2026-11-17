@@ -14,6 +14,12 @@ run_cmd do
     ``GenericChaining.gamma1_discrete_le_cutoff, ``GenericChaining.gamma1_discrete_le_log2,
     ``GenericChaining.gamma1_discrete_singleton, ``GenericChaining.exists_common_representatives,
     ``GenericChaining.HasMixedTail.level_bound, ``GenericChaining.HasMixedTail.dyadic_edge_bound,
+    ``GenericChaining.weighted_link_bound, ``GenericChaining.mixed_threshold_le_weight,
+    ``GenericChaining.chainEdges_card_exp, ``GenericChaining.gamma1_ne_top,
+    ``GenericChaining.gamma2_ne_top, ``GenericChaining.exists_nets_cost_lt,
+    ``GenericChaining.exists_common_chain, ``GenericChaining.chain_length_le_cost,
+    ``GenericChaining.integral_le_of_dyadic_tail, ``GenericChaining.finite_chain_tail,
+    ``GenericChaining.finite_chain_expectation, ``GenericChaining.dirksen_expectation,
     ``GenericChaining.ae_eq_of_zero_contrast, ``GenericChaining.maximum_ae_eq_of_zero_contrasts]
   for target in targets do
     let axioms ← Lean.collectAxioms target
