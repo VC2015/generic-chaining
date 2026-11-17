@@ -8,7 +8,7 @@ open MeasureTheory GenericChaining
 open scoped ENNReal NNReal BigOperators
 namespace ChainingReport
 
--- Report 1, implemented by Dirksen.dirksen_expectation.
+-- Theorem 1, implemented by Dirksen.dirksen_expectation.
 example {T Ω : Type*} [Fintype T] [Nonempty T]
     [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
     (X : T → Ω → ℝ) (d₁ d₂ : T → T → ℝ≥0)
@@ -23,7 +23,7 @@ example {T Ω : Type*} [Fintype T] [Nonempty T]
         (gamma1 (fun s t => (d₁ s t : ℝ≥0∞))).toReal) +
       2 * ⨆ t, ∫ ω, |X t ω - X t₀ ω| ∂μ := dirksen_expectation X d₁ d₂ diag₁ diag₂ symm₁ symm₂ tri₁ tri₂ htail hInt t₀
 
--- Report 2, implemented by Link.weighted_link_bound.
+-- Lemma 1, implemented by Link.weighted_link_bound.
 example {T : Type*} (d₁ d₂ : T → T → ℝ≥0)
     (tri₁ : ∀ s t c, d₁ s t ≤ d₁ s c + d₁ t c)
     (tri₂ : ∀ s t c, d₂ s t ≤ d₂ s c + d₂ t c)
@@ -35,7 +35,7 @@ example {T : Type*} (d₁ d₂ : T → T → ℝ≥0)
     (2 : ℝ) ^ (k + 1) * d₁ p q + Real.sqrt 2 ^ (k + 1) * d₂ p q ≤
       2 * enext + 4 * eprev := weighted_link_bound d₁ d₂ tri₁ tri₂ symm₁ symm₂ k t p q eprev enext hprev hnext
 
--- Report 3, implemented by ChainingExpectation.finite_chain_expectation.
+-- Lemma 2, implemented by ChainingExpectation.finite_chain_expectation.
 example {T Ω : Type*} [Fintype T] [Nonempty T] [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ] [DecidableEq T] {X : T → Ω → ℝ} {d₁ d₂ : T → T → ℝ≥0}
     (htail : HasMixedTail μ X d₁ d₂)
     (hInt : ∀ s t, Integrable (fun ω => X s ω - X t ω) μ)
@@ -48,19 +48,19 @@ example {T Ω : Type*} [Fintype T] [Nonempty T] [MeasurableSpace Ω] {μ : Measu
        Real.sqrt 2 ^ (k+1) * d₂ (r k t) (r (k+1) t))) ≤ B) :
     ∫ ω, incrementMaximum X t₀ ω ∂μ ≤ 8 * B := finite_chain_expectation htail hInt r K t₀ hstart hend hcard hB hlength
 
--- Report 4, implemented by GaussianChaining.gamma2_le_gaussianWidth.
+-- Theorem 2, implemented by GaussianChaining.gamma2_le_gaussianWidth.
 example {T : Type*} [Fintype T] [Nonempty T] {r : ℕ}
     (a : T → EuclideanSpace ℝ (Fin r)) :
     (gamma2 (fun s t => (canonicalDist a s t : ℝ≥0∞))).toReal ≤
       (growthChainingConstant / gaussianGrowthConstant) * gaussianWidth a := gamma2_le_gaussianWidth a
 
--- Report 4, implemented by GaussianChaining.gaussianWidth_le_gamma2.
+-- Theorem 2, implemented by GaussianChaining.gaussianWidth_le_gamma2.
 example {T : Type*} [Fintype T] [Nonempty T] {r : ℕ}
     (a : T → EuclideanSpace ℝ (Fin r)) :
     gaussianWidth a ≤ 100 *
       (gamma2 (fun s t => (canonicalDist a s t : ℝ≥0∞))).toReal := gaussianWidth_le_gamma2 a
 
--- Report 4, implemented by GaussianChaining.finite_gaussian_majorizing_measure.
+-- Theorem 2, implemented by GaussianChaining.finite_gaussian_majorizing_measure.
 example :
     ∃ Cₗ Cᵤ : ℝ, 0 < Cₗ ∧ 0 < Cᵤ ∧
       ∀ (r : ℕ) (T : Type*) [Fintype T] [Nonempty T]
@@ -68,12 +68,12 @@ example :
         (gamma2 (fun s t => (canonicalDist a s t : ℝ≥0∞))).toReal ≤ Cₗ * gaussianWidth a ∧
         gaussianWidth a ≤ Cᵤ * (gamma2 (fun s t => (canonicalDist a s t : ℝ≥0∞))).toReal := finite_gaussian_majorizing_measure
 
--- Report 5, implemented by GaussianComparison.gaussianWidth_mono_of_increment_le.
+-- Lemma 3, implemented by GaussianComparison.gaussianWidth_mono_of_increment_le.
 example {I : Type*} [Fintype I] [Nonempty I]
     {r s : ℕ} (A : I → EuclideanSpace ℝ (Fin r)) (B : I → EuclideanSpace ℝ (Fin s))
     (hinc : ∀ i j, ‖B i-B j‖^2 ≤ ‖A i-A j‖^2) : gaussianWidth B ≤ gaussianWidth A := gaussianWidth_mono_of_increment_le A B hinc
 
--- Report 6, implemented by GaussianMinoration.standardGaussian_iid_max_explicit_lower_bound.
+-- Lemma 4, implemented by GaussianMinoration.standardGaussian_iid_max_explicit_lower_bound.
 example {m : ℕ} [NeZero m] :
     (1 - Real.exp (-(Real.exp (-1) / (2 * Real.sqrt (2 * Real.pi))))) *
         Real.sqrt (Real.log (m : ℝ)) ≤
@@ -82,7 +82,7 @@ example {m : ℕ} [NeZero m] :
   rw [heq]
   exact standardGaussian_iid_max_explicit_lower_bound (m := m)
 
--- Report 7, implemented by GaussianLocalGrowth.gaussian_local_growth.
+-- Lemma 5, implemented by GaussianLocalGrowth.gaussian_local_growth.
 example {m r : ℕ} [NeZero m] {T : Type*}
     [Fintype T] [Nonempty T]
     (a : Fin m → T → EuclideanSpace ℝ (Fin r))
@@ -94,7 +94,7 @@ example {m r : ℕ} [NeZero m] {T : Type*}
     b + gaussianGrowthConstant * δ * Real.sqrt (Real.log (m : ℝ)) ≤
       gaussianWidth (fun it : Fin m × T => a it.1 it.2) := gaussian_local_growth a c hδ hρ hsmall hcent hloc b hb
 
--- Report 8, implemented by GrowthChaining.gamma2_le_of_localGrowth_exact.
+-- Lemma 6, implemented by GrowthChaining.gamma2_le_of_localGrowth_exact.
 example {T : Type*} [Fintype T] [Nonempty T]
     [DecidableEq T] (d : T → T → ℝ≥0) (diag : ∀ t, d t t = 0)
     (symm : ∀ s t, d s t = d t s)
@@ -114,12 +114,12 @@ example {T : Type*} [Fintype T] [Nonempty T]
   rw [show (1 / 8 : ℝ) * h = h / 8 by ring] at hlocal
   exact (add_le_add_left hlocal _).trans H
 
--- Report 9, implemented by Discrete.gamma1_discrete_le_log2.
+-- Lemma 7, implemented by Discrete.gamma1_discrete_le_log2.
 example {T : Type*} [Fintype T] [Nonempty T] [DecidableEq T]
     (δ : ℝ≥0) (hT : 2 ≤ Fintype.card T) :
     gamma1 (discreteDist (T := T) δ) ≤ ((2 * (Fintype.card T).log2 : ℕ) : ℝ≥0∞) * δ := gamma1_discrete_le_log2 δ hT
 
--- Report 9, implemented by Discrete.gamma1_discrete_singleton.
+-- Lemma 7, implemented by Discrete.gamma1_discrete_singleton.
 example {T : Type*} [Fintype T] [Nonempty T] [Subsingleton T]
     [DecidableEq T] (δ : ℝ≥0) : gamma1 (discreteDist (T := T) δ) = 0 := gamma1_discrete_singleton (T := T) δ
 
