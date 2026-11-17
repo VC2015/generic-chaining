@@ -1,6 +1,10 @@
 # Generic chaining in Lean
 
-This project proves the finite expectation form of Dirksen's mixed-tail theorem and both directions of the finite Gaussian majorizing-measure theorem. The index set may contain repeated vectors and the canonical distance may be a pseudometric.
+[Read the four-page mathematical report](docs/REPORT.pdf) · [LaTeX source](docs/REPORT.tex) · [Exact Lean statements](https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/CHECKED_THEOREMS.md) · [Audited proof revision](https://github.com/VC2015/generic-chaining/tree/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc)
+
+The report is by GPT-Sol 6.2, prompted by Victor Chernozhukov. It explains how the constructions fit together and identifies precisely which results of Dirksen, Talagrand, and van Handel they implement.
+
+The proof revision linked above proves the finite expectation form of Dirksen's mixed-tail theorem and both directions of the finite Gaussian majorizing-measure theorem. The index set may contain repeated vectors and the canonical distance may be a pseudometric.
 
 For vectors `a : T → EuclideanSpace ℝ (Fin r)`, the Gaussian process is evaluated under the concrete product of `r` standard real Gaussian laws. Its canonical distance is `d(s,t) = ‖a s - a t‖`, and its width `W(T)` is the expected **one-sided** maximum of the projections. The checked statements are
 
@@ -24,14 +28,16 @@ The positive constant `C = gaussianMajorizingConstant` is fixed before the dimen
 
 The lower bound is the direction needed for Lemma C.2 of the rectangle CLT. The rectangle project can import a fixed revision and instantiate it on the signed coordinates and zero. The full moment and deviation forms of Dirksen's theorem and extensions to infinite index sets remain future work.
 
-The completed Dirksen checkpoint is commit `59b590c` (`GenericChaining.dirksen_expectation`). Its exact type, the two Gaussian theorem types, and the joint statement are recorded in [CHECKED_THEOREMS.md](CHECKED_THEOREMS.md). The construction and source references are in [PROOF_PLAN.md](PROOF_PLAN.md) and [GAUSSIAN_ASSIGNMENT.md](GAUSSIAN_ASSIGNMENT.md).
+The completed Dirksen checkpoint is commit `59b590c` (`GenericChaining.dirksen_expectation`). Its exact type, the two Gaussian theorem types, and the joint statement are recorded in [CHECKED_THEOREMS.md](https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/CHECKED_THEOREMS.md). The mathematical sources are Dirksen's [Theorem 3.5](https://doi.org/10.1214/EJP.v20-3760), Talagrand's [partition construction](https://doi.org/10.1007/BF01896658), and van Handel's [Chapter 6](https://swh.princeton.edu/~rvan/migrated-to-math-2018-06-20/APC550.pdf).
 
-The project pins Lean 4.19.0 and mathlib revision `c44e0c8ee63ca166450922a373c7409c5d26b00b`. With elan installed, run:
+The project pins Lean 4.19.0 and mathlib revision `c44e0c8ee63ca166450922a373c7409c5d26b00b`. With elan installed and a clone of this repository, run the following commands to reproduce the exact revision described in the report.
 
 ```sh
+git fetch origin
+git switch --detach b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc
 lake exe cache get
 lake build
 lake env lean Audit.lean
 ```
 
-The build and audit pass. The audit traverses the exported mathematical declarations and rejects admissions or axioms outside `propext`, `Classical.choice`, and `Quot.sound`.
+The report's independent rebuild and audit passed for all 54 listed declarations. The audit traverses the exported mathematical declarations and rejects admissions or axioms outside `propext`, `Classical.choice`, and `Quot.sound`.
