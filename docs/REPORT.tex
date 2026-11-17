@@ -39,6 +39,25 @@
 \newcommand{\Pp}{\mathbb P}
 \newcommand{\nm}[1]{\texttt{\detokenize{#1}}}
 
+% Store each declaration's source location once for the table and the theorem titles.
+\newcommand{\setdecl}[3]{%
+  \expandafter\def\csname decl:#1\endcsname{%
+    \href{https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/GenericChaining/#2.lean\#L#3}}}
+\DeclareRobustCommand{\decllink}[2]{\csname decl:#1\endcsname{#2}}
+\newcommand{\declname}[1]{\decllink{#1}{\nm{#1}}}
+\setdecl{dirksen_expectation}{Dirksen}{24}
+\setdecl{weighted_link_bound}{Link}{59}
+\setdecl{finite_chain_expectation}{ChainingExpectation}{128}
+\setdecl{gamma2_le_gaussianWidth}{GaussianChaining}{28}
+\setdecl{gaussianWidth_le_gamma2}{GaussianChaining}{51}
+\setdecl{finite_gaussian_majorizing_measure}{GaussianChaining}{79}
+\setdecl{gaussianWidth_mono_of_increment_le}{GaussianComparison}{276}
+\setdecl{standardGaussian_iid_max_explicit_lower_bound}{GaussianMinoration}{319}
+\setdecl{gaussian_local_growth}{GaussianLocalGrowth}{206}
+\setdecl{gamma2_le_of_localGrowth_exact}{GrowthChaining}{52}
+\setdecl{gamma1_discrete_le_log2}{Discrete}{58}
+\setdecl{gamma1_discrete_singleton}{Discrete}{82}
+
 \title{\Large Finite Generic Chaining in Lean}
 \author{\normalsize GPT-Sol 6.2, prompted by Victor Chernozhukov}
 \date{\normalsize 17 November 2026}
@@ -58,9 +77,40 @@
 Two results explain how the geometry of a finite family of random variables governs its expected maximum. Dirksen's inequality bounds the maximum using two distances derived from the tails of the increments. For Gaussian variables, Talagrand's majorizing-measure theorem identifies the expected maximum up to constants from a single distance. We describe the Lean proofs and show how the two results enter a central limit theorem for rectangles.
 \end{abstract}
 
-\section{Mixed tails and the expected maximum}
-
 Suppose we use the largest of $p$ standardized estimation errors to construct simultaneous confidence bounds. If all the errors equal one standard Gaussian, adding another copy leaves the maximum unchanged. If they are independent standard Gaussians, the expected maximum grows on the order of $\sqrt{\log p}$. The two families have the same marginal distributions. What distinguishes them is the size of their increments. Generic chaining uses these increments to decide which coordinates can represent one another and how much each approximation costs.
+
+Table~\ref{tab:lean} connects the mathematical statements with their proofs. A result number takes the reader to its statement in this report. A declaration name or a theorem or lemma title opens the Lean source at the checked revision. All declaration names in the table belong to the namespace \nm{GenericChaining}.
+
+\begin{table}[!ht]
+\centering
+\caption{Theorems and lemmas with their Lean declarations.}\label{tab:lean}
+\smallskip
+\small
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{@{}l@{\enspace}l@{\enspace}l@{}}
+\toprule
+Number & Result & Lean declaration \\
+\midrule
+\hyperref[th:dir]{Theorem~\ref*{th:dir}} & Mixed-tail expectation & \declname{dirksen_expectation} \\
+\addlinespace[3pt]
+\hyperref[th:mm]{Theorem~\ref*{th:mm}} & Gaussian majorizing measures & \declname{finite_gaussian_majorizing_measure} \\
+ & $\gamma_2$ bounded by width & \declname{gamma2_le_gaussianWidth} \\
+ & Width bounded by $\gamma_2$ & \declname{gaussianWidth_le_gamma2} \\
+\addlinespace[3pt]
+\hyperref[lem:link]{Lemma~\ref*{lem:link}} & Consecutive representatives & \declname{weighted_link_bound} \\
+\hyperref[lem:chain]{Lemma~\ref*{lem:chain}} & Finite-chain expectation & \declname{finite_chain_expectation} \\
+\hyperref[lem:comp]{Lemma~\ref*{lem:comp}} & Sudakov--Fernique comparison & \declname{gaussianWidth_mono_of_increment_le} \\
+\hyperref[lem:iid]{Lemma~\ref*{lem:iid}} & Independent Gaussian maximum & \declname{standardGaussian_iid_max_explicit_lower_bound} \\
+\hyperref[lem:growth]{Lemma~\ref*{lem:growth}} & Local Gaussian growth & \declname{gaussian_local_growth} \\
+\hyperref[lem:det]{Lemma~\ref*{lem:det}} & From local growth to nets & \declname{gamma2_le_of_localGrowth_exact} \\
+\hyperref[lem:disc]{Lemma~\ref*{lem:disc}} & Discrete distance, $m\ge2$ & \declname{gamma1_discrete_le_log2} \\
+ & Singleton & \declname{gamma1_discrete_singleton} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\clearpage
+\section{Mixed tails and the expected maximum}
 
 Let $T$ be a finite, nonempty set of indices. A pseudometric $d$ on $T$ may give distinct points distance zero. To approximate $T$, we choose nonempty sets of representatives $N_k\subseteq T$, called \emph{nets}. We start with one point and allow more at finer levels. Precisely, the nets are admissible if $|N_k|\le M_k$, where $M_0=1$ and $M_k=2^{2^k}$ for $k\ge1$. For $\alpha=1,2$, define
 \begin{equation}\label{eq:gamma}
@@ -72,7 +122,7 @@ For each $t$ we sum its approximation errors across scales. We then choose the n
 
 Bernstein's inequality for a sum of independent bounded random variables explains why two distances arise. The variance controls moderate deviations, while the size of a single summand also matters at larger deviations. Dirksen allows a separate pseudometric for each scale. The following is the finite first-moment case of his Theorem~3.5~\cite{Dirksen}.
 
-\begin{theorem}[Finite mixed-tail expectation bound]\label{th:dir}
+\begin{theorem}[{\decllink{dirksen_expectation}{Finite mixed-tail expectation bound}}]\label{th:dir}
 Let $(X_t)_{t\in T}$ be real random variables on a probability space with integrable pairwise increments. Suppose finite pseudometrics $d_1,d_2$ satisfy, for every $s,t\in T$ and $u>0$,
 \[
  \Pp\{|X_s-X_t|>\sqrt u\,d_2(s,t)+u\,d_1(s,t)\}\le2e^{-u}.
@@ -85,14 +135,13 @@ Then for each $t_0\in T$,
 \]
 \end{theorem}
 
-\clearpage
 To understand the sum of the two costs in Theorem~\ref{th:dir}, choose nearly minimizing nets $N_{1k}$ and $N_{2k}$ for the two distances. For a fixed $t$, its closest representatives in these nets may differ. Yet to telescope the random increments we need a single path ending at $t$. At each level, group indices that have the same pair of nearest representatives, making a fixed choice in each tie. From each group choose a member that minimizes
 \[
  e_k(t)=2^k d_1(t,N_{1k})+2^{k/2}d_2(t,N_{2k}).
 \]
 Write $w_k(s,t)=2^k d_1(s,t)+2^{k/2}d_2(s,t)$. By the triangle inequalities, every member $t$ is within weighted distance $2e_k(t)$ of the chosen member of its group. The next lemma bounds the link between two successive choices.
 
-\begin{lemma}[Consecutive representatives]\label{lem:link}
+\begin{lemma}[{\decllink{weighted_link_bound}{Consecutive representatives}}]\label{lem:link}
 For finite pseudometrics $d_1,d_2$, let $t,p,q\in T$, $k\ge0$, and $e,f\in\R$. If $w_k(t,p)\le2e$ and $w_{k+1}(t,q)\le2f$, then
 \[
  w_{k+1}(p,q)\le4e+2f .
@@ -105,7 +154,7 @@ Apply the triangle inequality through $t$. The contribution of the previous repr
 
 When we sum this bound along a path, an error at one level enters with coefficients at most four and two. The resulting path length is at most six times the sum of the two net costs. It remains to control the random increments on all these paths at once.
 
-\begin{lemma}[Expectation along a finite chain]\label{lem:chain}
+\begin{lemma}[{\decllink{finite_chain_expectation}{Expectation along a finite chain}}]\label{lem:chain}
 Under the mixed-tail and integrability hypotheses of Theorem~\ref{th:dir}, let $r_k:T\to T$ satisfy $|\operatorname{im}r_k|\le M_k^2$ for every $k\ge0$. Suppose $r_0(t)=a$ and $r_K(t)=t$ for all $t$, with $K\ge0$. If $B\ge0$ and
 $\sum_{k=0}^{K-1}w_{k+1}(r_k(t),r_{k+1}(t))\le B$ for each $t$, then
 \[
@@ -124,12 +173,11 @@ Indeed, whenever all links satisfy their bounds, their increments telescope from
 
 Applying Lemma~\ref{lem:chain} to the common path gives $8\cdot6=48$. To return from its root $a$ to the prescribed base point $t_0$, we add at most $\E|X_a-X_{t_0}|$. Letting the two net costs decrease to their infima proves Theorem~\ref{th:dir}.
 
-\clearpage
 \section{Gaussian width and comparison}
 
 Suppose now that $G$ is a vector of $r$ independent standard Gaussians and that $a_t\in\R^r$ for each $t\in T$. For the process $Y_t=\langle G,a_t\rangle$, the standard deviation of $Y_s-Y_t$ is precisely $d_a(s,t)=\|a_s-a_t\|_2$. Write $W(a)=\E\max_t Y_t$ for its \emph{Gaussian width}. This maximum is one-sided. Translating every vector by the same $v$ adds $\langle G,v\rangle$ to the maximum, so its expectation is unchanged. The finite Gaussian majorizing-measure theorem relates the width to the best approximation cost in the increment distance $d_a$ \cite{Talagrand,vanHandel}.
 
-\begin{theorem}[Finite Gaussian majorizing measures]\label{th:mm}
+\begin{theorem}[{\decllink{finite_gaussian_majorizing_measure}{Finite Gaussian majorizing measures}}]\label{th:mm}
 There exist $C_{\rm L},C_{\rm U}>0$ such that for every $r\ge0$, every finite nonempty $T$ and every $a:T\to\R^r$,
 \[
  \gamma_2(T,d_a)\le C_{\rm L} W(a),\qquad
@@ -142,7 +190,7 @@ The upper bound follows directly from Theorem~\ref{th:dir}. Gaussian increments 
 
 For the other direction, we must construct good nets knowing only the Gaussian width. We first compare two Gaussian families. If all the increment variances decrease, the expected maximum can only decrease, even when the two families are represented in different dimensions.
 
-\begin{lemma}[Sudakov--Fernique comparison]\label{lem:comp}
+\begin{lemma}[{\decllink{gaussianWidth_mono_of_increment_le}{Sudakov--Fernique comparison}}]\label{lem:comp}
 Let $A:T\to\R^r$ and $B:T\to\R^s$. If $\|B_i-B_j\|_2^2\le\|A_i-A_j\|_2^2$ for all $i,j$, then $W(B)\le W(A)$.
 \end{lemma}
 
@@ -152,7 +200,7 @@ Put the two families in orthogonal Gaussian coordinate blocks, replace the maxim
 
 We shall compare separated groups of vectors with a process that has one independent Gaussian offset per group. The following estimate gives the expected contribution of the largest offset.
 
-\begin{lemma}[Independent Gaussian maximum]\label{lem:iid}
+\begin{lemma}[{\decllink{standardGaussian_iid_max_explicit_lower_bound}{Independent Gaussian maximum}}]\label{lem:iid}
 If $m\ge1$ and $H_1,\ldots,H_m$ are independent standard Gaussians, then
 \[
  \E\max_{i\le m}H_i\ge q\sqrt{\log m},
@@ -164,12 +212,11 @@ If $m\ge1$ and $H_1,\ldots,H_m$ are independent standard Gaussians, then
 For $m\ge2$, integrate the Gaussian density over a short interval and use independence. This gives $\Pp\{M\ge\sqrt{\log m}\}\ge q$ for $M=\max_{i<m}H_i$. Hence $\E\max(M,0)\ge q\sqrt{\log m}$. Conditional on the first $m-1$ coordinates, convexity and $\E H_m=0$ give $\E[\max(M,H_m)\mid M]\ge\max(M,0)$. The case $m=1$ follows from centering.
 \end{proof}
 
-\clearpage
 \section{From local Gaussian width to a sequence of nets}
 
 Suppose that the vectors lie in several small, well-separated groups. Maximizing within the groups already gives at least the smallest of their widths. The choice among groups contributes an additional amount, quantified below. Put $c_{\rm g}=q/4$, with $q$ as in Lemma~\ref{lem:iid}.
 
-\begin{lemma}[Local Gaussian growth]\label{lem:growth}
+\begin{lemma}[{\decllink{gaussian_local_growth}{Local Gaussian growth}}]\label{lem:growth}
 Let $m\ge1$, $c_i\in\R^r$, and $a_i:T\to\R^r$ for $1\le i\le m$. Suppose $0\le\rho\le\delta/8$, $\|c_i-c_j\|_2\ge\delta$ for $i\ne j$, and $\|a_i(t)-c_i\|_2\le\rho$ for all $i,t$. If $b\in\R$ satisfies $b\le W(a_i)$ for every $i$, then
 \[
  b+c_{\rm g}\delta\sqrt{\log m}\le W\big((a_i(t))_{i,t}\big).
@@ -186,7 +233,7 @@ Within each group the two processes have the same increments. Across different g
 
 The remaining argument is deterministic. We partition $T$ recursively. In a cell containing many well-separated small balls, the growth bound controls how much smaller the least of their widths must be. The next lemma shows that these gains, summed along a branch, control the cost of turning the partitions into admissible nets. Write $B_A(s,h)=\{t\in A:d(s,t)\le h\}$.
 
-\begin{lemma}[Local growth controls the net cost]\label{lem:det}
+\begin{lemma}[{\decllink{gamma2_le_of_localGrowth_exact}{Local growth controls the net cost}}]\label{lem:det}
 Let $d$ be a finite pseudometric on $T$ and $F:2^T\to[0,\infty)$ be monotone under inclusion. Suppose $c>0$ and, whenever $h>0$ and $\varnothing\ne N\subseteq A\subseteq T$ has pairwise distances at least $h$ between distinct points,
 \[
  F(A)\ge\min_{s\in N}F(B_A(s,h/8))+ch\sqrt{\log |N|}.
@@ -203,7 +250,6 @@ Within each cell, choose a remaining center whose small ball has largest $F$ and
 
 Apply Lemma~\ref{lem:det} with $F(A)$ equal to the Gaussian width on $A$ for nonempty $A$ and $F(\varnothing)=0$. These values are nonnegative and monotone. Lemma~\ref{lem:growth} supplies the growth hypothesis with $c=c_{\rm g}$. We obtain $\gamma_2(T,d_a)\le (K_*/c_{\rm g})W(a)$, completing the proof of Theorem~\ref{th:mm}.
 
-\clearpage
 \section{Application to rectangle probabilities}
 
 In Lemma~C.2 of the rectangle paper~\cite{CLT}, the authors bound the expected maximum norm of a sum $W=\sum_i\xi_i$ of independent centered random vectors in $\R^p$. Assume $\|\xi_i\|_\infty\le\delta$ almost surely and $\operatorname{Var}(W_j)=1$ for each coordinate. Let $Z$ be a centered Gaussian vector with the same covariance $\Sigma$ as $W$. Our aim is to retain the dependence between coordinates when we compare the two maxima.
@@ -215,7 +261,7 @@ To put the problem in the form of Theorem~\ref{th:dir}, use the index set $T=\{0
 \]
 The first distance records the covariance of each contrast. The second charges the same amount for every distinct pair, so its cost depends only on the number of indices.
 
-\begin{lemma}[Discrete exponential-tail cost]\label{lem:disc}
+\begin{lemma}[{\decllink{gamma1_discrete_le_log2}{Discrete exponential-tail cost}}]\label{lem:disc}
 Let $|T|=m\ge2$, $\delta\ge0$ finite, and $d_\delta(s,t)=\delta\mathbf{1}_{\{s\ne t\}}$. Then
 \[
  \gamma_1(T,d_\delta)\le 2\lfloor\log_2m\rfloor\,\delta.
@@ -233,36 +279,11 @@ The signed Gaussian maximum is $\|Z\|_\infty$, including when $\Sigma$ is singul
 \]
 Here the chaining inequalities are the results certified in this repository. The signed-coordinate construction and Bernstein estimate are the steps supplied by the rectangle paper.
 
-\clearpage
-\section{Correspondence with the Lean proofs}
-Table~\ref{tab:lean} gives the implementing declarations at \href{https://github.com/VC2015/generic-chaining/tree/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc}{proof revision \nm{b0db8f3}}. Each name links to its proof. The code represents nets by indexed centers and allows repeated centers. It proves that this gives the infimum in \eqref{eq:gamma} and that the finite costs used here have real values. Likewise, the code states the growth hypothesis for every common lower bound on the local values. Taking their minimum gives the formulation in Lemma~\ref{lem:det}.
+\section{Checking the Lean statements}
+The code represents nets by indexed centers and allows repeated centers. It proves that this gives the infimum in \eqref{eq:gamma} and that the finite costs used here have real values. Likewise, the code states the growth hypothesis for every common lower bound on the local values. Taking their minimum gives the formulation in Lemma~\ref{lem:det}.
 
-\begin{table}[!htb]
-\centering
-\caption{Numbered results and their Lean proofs.}\label{tab:lean}
-\smallskip
-\small
-\begin{tabular}{@{}ll@{}}
-\toprule
-Result & Lean declaration \\
-\midrule
-Theorem~\ref{th:dir} & \href{https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/GenericChaining/Dirksen.lean\#L24}{\nm{dirksen_expectation}} \\
-Lemma~\ref{lem:link} & \href{https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/GenericChaining/Link.lean\#L59}{\nm{weighted_link_bound}} \\
-Lemma~\ref{lem:chain} & \href{https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/GenericChaining/ChainingExpectation.lean\#L128}{\nm{finite_chain_expectation}} \\
-Theorem~\ref{th:mm} & \href{https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/GenericChaining/GaussianChaining.lean\#L28}{\nm{gamma2_le_gaussianWidth}} \\
- & \href{https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/GenericChaining/GaussianChaining.lean\#L51}{\nm{gaussianWidth_le_gamma2}} \\
- & \href{https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/GenericChaining/GaussianChaining.lean\#L79}{\nm{finite_gaussian_majorizing_measure}} \\
-Lemma~\ref{lem:comp} & \href{https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/GenericChaining/GaussianComparison.lean\#L276}{\nm{gaussianWidth_mono_of_increment_le}} \\
-Lemma~\ref{lem:iid} & \href{https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/GenericChaining/GaussianMinoration.lean\#L319}{\nm{standardGaussian_iid_max_explicit_lower_bound}} \\
-Lemma~\ref{lem:growth} & \href{https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/GenericChaining/GaussianLocalGrowth.lean\#L206}{\nm{gaussian_local_growth}} \\
-Lemma~\ref{lem:det} & \href{https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/GenericChaining/GrowthChaining.lean\#L52}{\nm{gamma2_le_of_localGrowth_exact}} \\
-Lemma~\ref{lem:disc} & \href{https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/GenericChaining/Discrete.lean\#L58}{\nm{gamma1_discrete_le_log2}} \\
- & \href{https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/GenericChaining/Discrete.lean\#L82}{\nm{gamma1_discrete_singleton}} \\
-\bottomrule
-\end{tabular}
-\end{table}
 
-The companion file \href{https://github.com/VC2015/generic-chaining/blob/main/docs/ReportStatements.lean}{\nm{ReportStatements.lean}} restates the numbered results and asks Lean to match each statement with its proof. To repeat the check, use the proof revision above with its pinned toolchain (Lean 4.19.0) and dependencies. Place the companion file beside \nm{Audit.lean} and run the following commands from that directory.
+The companion file \href{https://github.com/VC2015/generic-chaining/blob/main/docs/ReportStatements.lean}{\nm{ReportStatements.lean}} restates the numbered results and asks Lean to match each statement with its proof. To repeat the check, use \href{https://github.com/VC2015/generic-chaining/tree/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc}{proof revision \nm{b0db8f3}} with its pinned toolchain (Lean 4.19.0) and dependencies. Place the companion file beside \nm{Audit.lean} and run the following commands from that directory.
 \begin{verbatim}
 lake exe cache get
 lake build
