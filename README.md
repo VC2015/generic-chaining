@@ -1,23 +1,43 @@
 # Generic chaining in Lean
 
-This project develops two finite-index theorems that can be used together whenever the increments of a process exhibit Gaussian tails at moderate deviations and exponential tails at larger deviations. Dirksen's inequality bounds the expected maximum using two admissible-net functionals. Talagrand's Gaussian majorizing-measure theorem identifies the Gaussian functional, up to universal constants, with the expected maximum of a Gaussian process in its canonical distance. Both headline results are open in this checkout. The modules below contain checked steps toward them.
+[Read the four-page mathematical report](docs/REPORT.pdf) · [LaTeX source](docs/REPORT.tex) · [Exact Lean statements](https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/CHECKED_THEOREMS.md) · [Audited proof revision](https://github.com/VC2015/generic-chaining/tree/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc)
 
-| Lean module | Checked result |
+The report is by GPT-Sol 6.2, prompted by Victor Chernozhukov. It explains how the constructions fit together and identifies precisely which results of Dirksen, Talagrand, and van Handel they implement.
+
+The proof revision linked above proves the finite expectation form of Dirksen's mixed-tail theorem and both directions of the finite Gaussian majorizing-measure theorem. The index set may contain repeated vectors and the canonical distance may be a pseudometric.
+
+For vectors `a : T → EuclideanSpace ℝ (Fin r)`, the Gaussian process is evaluated under the concrete product of `r` standard real Gaussian laws. Its canonical distance is `d(s,t) = ‖a s - a t‖`, and its width `W(T)` is the expected **one-sided** maximum of the projections. The checked statements are
+
+$$
+\gamma_2(T,d) \le C\,W(T), \qquad W(T) \le 100\,\gamma_2(T,d).
+$$
+
+The positive constant `C = gaussianMajorizingConstant` is fixed before the dimension, index set, and vectors. The public theorems are `GenericChaining.gamma2_le_gaussianWidth` and `GenericChaining.gaussianWidth_le_gamma2`; `finite_gaussian_majorizing_measure` exports them together with both constants quantified first. The extended chaining costs are proved finite before conversion to real values. Common translations preserve width and cost; a singleton has both width and cost zero.
+
+| Lean modules | Checked results |
 |---|---|
-| `Functional`, `FiniteNets` | The indexed and finite-subset definitions of the chaining functional agree. Pulling the distance back by a surjection preserves the functional. |
-| `Discrete` | The discrete distance of scale δ has γ₁ at most 2δ⌊log₂ m⌋ on m ≥ 2 points and zero cost on a singleton. |
-| `CommonNet` | Given two choices of centers, each occupied pair admits a representative whose combined weighted approximation error is at most twice the original error. |
-| `MixedTail` | A mixed-tail increment hypothesis implies a simultaneous bound for all edges on all levels of a finite chain. The bound is uniform in the number of levels and allows dependent increments. |
-| `GaussianGeometry` | A contrast with zero second moment vanishes almost surely. A finite process and its surjective reindexing have the same maximum almost surely when matched coordinates have zero squared contrast in expectation. |
+| `Functional`, `FiniteNets`, `Discrete` | Indexed and finite-subset chaining definitions agree; surjective pullbacks preserve the functional; the discrete γ₁ bound is logarithmic. |
+| `CommonNet`, `Link`, `ChainEdges`, `FiniteCost`, `ChainGeometry` | Common representatives, the consecutive weighted-link bound, edge counting, terminating near-optimal nets, and finite chain-length estimates. |
+| `MixedTail`, `TailExpectation`, `ChainingExpectation`, `Dirksen` | `dirksen_expectation` proves E max abs(Xₜ − Xₜ₀) ≤ 48(γ₂ + γ₁) + 2 max E abs(Xₜ − Xₜ₀), including zero distances and zero total chain length. |
+| `GaussianCore`, `GaussianMetric`, `GaussianTail`, `GaussianWidth`, `GaussianFiniteWidth` | Concrete product Gaussian law, projection MGFs and tails, canonical second moments, integrable finite maxima, local widths, translations, and repeated vectors. |
+| `GaussianStein`, `GaussianProductStein`, `GaussianSmoothMax`, `GaussianSoftMaxStein`, `GaussianInterpolation`, `GaussianComparison`, `GaussianEmbedding` | Scalar and product Stein identities, smooth-max calculus, differentiation under the integral, orthogonal embeddings, and finite Sudakov–Fernique comparison. |
+| `GaussianMinoration`, `GaussianGrowth`, `GaussianLocalGrowth`, `GaussianGrowthFunctional` | Explicit iid Gaussian maximum minoration and concrete local width growth for separated centers with local radius at most one eighth of the separation. |
+| `GrowthPartitions`, `LabelledNets`, `LabelledCost`, `GrowthChaining` | Actual greedy labelled partitions, branch telescoping, inverse-mass threshold cuts, exact admissible capacities, and comparison with the repository's γ₂ functional. |
+| `GaussianFunctional`, `GaussianChaining` | Scaling and diameter control, the majorizing-measure lower bound, and the converse obtained from Dirksen. |
+| `GaussianGeometry` | Zero second moments identify coordinates almost surely; surjective quotient processes have the same finite maximum. |
 
-The first application is Lemma C.2 of the rectangle CLT. There the index set consists of the signed coordinates and zero. The discrete distance accounts for the uniform bound on each summand. The canonical Gaussian distance accounts for the covariance of the sum, including singular covariance. The two target theorems and the order in which to prove their remaining steps are specified in the [proof plan](PROOF_PLAN.md). [Rectangle CLT, Appendix C](https://arxiv.org/abs/2611.21474v1)
+The lower bound is the direction needed for Lemma C.2 of the rectangle CLT. The rectangle project can import a fixed revision and instantiate it on the signed coordinates and zero. The full moment and deviation forms of Dirksen's theorem and extensions to infinite index sets remain future work.
 
-With Lean's elan toolchain manager installed, run the following commands from the repository root. The project pins Lean 4.19.0 and the same mathlib revision as the original rectangle-CLT verification. The first command retrieves precompiled dependencies.
+The completed Dirksen checkpoint is commit `59b590c` (`GenericChaining.dirksen_expectation`). Its exact type, the two Gaussian theorem types, and the joint statement are recorded in [CHECKED_THEOREMS.md](https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/CHECKED_THEOREMS.md). The mathematical sources are Dirksen's [Theorem 3.5](https://doi.org/10.1214/EJP.v20-3760), Talagrand's [partition construction](https://doi.org/10.1007/BF01896658), and van Handel's [Chapter 6](https://swh.princeton.edu/~rvan/migrated-to-math-2018-06-20/APC550.pdf).
+
+The project pins Lean 4.19.0 and mathlib revision `c44e0c8ee63ca166450922a373c7409c5d26b00b`. With elan installed and a clone of this repository, run the following commands to reproduce the exact revision described in the report.
 
 ```sh
+git fetch origin
+git switch --detach b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc
 lake exe cache get
 lake build
 lake env lean Audit.lean
 ```
 
-Lean checks every proof through the import `GenericChaining`. The last command also traverses the dependencies of every public theorem and fails on an admission or an axiom outside the usual three foundations of mathlib, `propext`, `Classical.choice`, and `Quot.sound`. The imported modules depend only on mathlib and its dependencies.
+The report's independent rebuild and audit passed for all 54 listed declarations. The audit traverses the exported mathematical declarations and rejects admissions or axioms outside `propext`, `Classical.choice`, and `Quot.sound`.
