@@ -3,3 +3,10 @@ import GenericChaining.Discrete
 import GenericChaining.CommonNet
 import GenericChaining.MixedTail
 import GenericChaining.GaussianGeometry
+import GenericChaining.Dirksen
+import GenericChaining.GaussianChaining
+import GenericChaining.GaussianFiniteWidth
+import GenericChaining.GaussianMinoration
+import GenericChaining.GaussianComparison
+import GenericChaining.GaussianGrowth
+import GenericChaining.GrowthPartitions
