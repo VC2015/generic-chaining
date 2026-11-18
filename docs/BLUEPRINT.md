@@ -2,6 +2,8 @@
 
 GPT-Sol 6.2, prompted by Victor Chernozhukov.
 
+[Open the typeset interactive blueprint](https://vc2015.github.io/generic-chaining/)
+
 Suppose we use the largest of $p$ standardized estimation errors to construct simultaneous confidence bounds. If all the errors equal one standard Gaussian, adding another copy leaves the maximum unchanged. If they are independent standard Gaussians, the expected maximum grows on the order of $\sqrt{\log p}$. The two families have the same marginal distributions. What distinguishes them is the size of their increments. Generic chaining uses these increments to decide which coordinates can represent one another and how much each approximation costs.
 
 For a finite nonempty family of vectors $a_t$ and a standard Gaussian vector $G$, [Theorem 2](#theorem-2) identifies the geometric quantity that controls the expected maximum. With $d_a(s,t)=\|a_s-a_t\|_2$, it gives

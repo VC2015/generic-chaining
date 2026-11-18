@@ -47,6 +47,9 @@ page.head.querySelector('#reader-css').textContent = [
 const main = page.querySelector('main');
 while (content.body.firstChild) main.append(content.body.firstChild);
 const article = main.querySelector('.level1');
+// The Markdown view links here for readers who opened the former entry point.
+const webLink = article.querySelector('p > a[href="https://vc2015.github.io/generic-chaining/"]');
+webLink?.parentElement.remove();
 article.querySelector('h1 + p').className = 'byline';
 article.querySelector('h1 + p').textContent = 'GPT-Sol 6.2, prompted by Victor Chernozhukov';
 
