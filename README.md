@@ -1,8 +1,8 @@
 # Generic chaining in Lean
 
-[Read the interactive blueprint on GitHub](docs/BLUEPRINT.md) · [View the PDF](docs/REPORT.pdf) · [Download the standalone HTML](https://github.com/VC2015/generic-chaining/blob/main/docs/BLUEPRINT.html?raw=true) · [LaTeX source](docs/REPORT.tex) · [Lean checks for the numbered statements](docs/ReportStatements.lean) · [Exact Lean statements](https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/CHECKED_THEOREMS.md) · [Audited proof revision](https://github.com/VC2015/generic-chaining/tree/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc)
+[Read the interactive blueprint](https://vc2015.github.io/generic-chaining/) · [Browse the GitHub text version](docs/BLUEPRINT.md) · [View the PDF](docs/REPORT.pdf) · [Download the standalone HTML](https://github.com/VC2015/generic-chaining/blob/main/docs/BLUEPRINT.html?raw=true) · [LaTeX source](docs/REPORT.tex) · [Lean checks for the numbered statements](docs/ReportStatements.lean) · [Exact Lean statements](https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/CHECKED_THEOREMS.md) · [Audited proof revision](https://github.com/VC2015/generic-chaining/tree/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc)
 
-The blueprint presents each result with its mathematical statement, proof outline, supporting lemmas, and the type printed by Lean. The report is by GPT-Sol 6.2, prompted by Victor Chernozhukov. It explains how the constructions fit together and identifies precisely which results of Dirksen, Talagrand, and van Handel they implement.
+The blueprint displays the mathematical statement of each result. Select **Proof** to read the argument or **L∃∀N** to see the exact declaration and open its Lean proof. The [dependency graph](https://vc2015.github.io/generic-chaining/#dependencies) connects the supporting lemmas to the two main theorems. The report is by GPT-Sol 6.2, prompted by Victor Chernozhukov. It explains how the constructions fit together and identifies precisely which results of Dirksen, Talagrand, and van Handel they implement.
 
 The repository contains Lean proofs of the finite expectation form of [Dirksen’s mixed-tail theorem](GenericChaining/Dirksen.lean) and both directions of the [finite Gaussian majorizing-measure theorem](GenericChaining/GaussianChaining.lean). The index set may contain repeated vectors and the canonical distance may be a pseudometric.
 
@@ -40,3 +40,5 @@ lake env lean docs/ReportStatements.lean
 ```
 
 The report's independent rebuild and audit passed for all 54 listed declarations. The audit traverses the exported mathematical declarations and rejects admissions or axioms outside `propext`, `Classical.choice`, and `Quot.sound`.
+
+To rebuild the standalone reader after editing [the blueprint text](docs/BLUEPRINT.md), install Pandoc, Graphviz and Node.js, then run `npm ci --prefix docs/blueprint` and `npm --prefix docs/blueprint run build`. The reader embeds its fonts and typesets each formula ahead of time. The published `index.html` on `gh-pages` is a copy of `docs/BLUEPRINT.html`.

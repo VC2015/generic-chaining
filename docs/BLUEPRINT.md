@@ -4,6 +4,16 @@ GPT-Sol 6.2, prompted by Victor Chernozhukov.
 
 Suppose we use the largest of $p$ standardized estimation errors to construct simultaneous confidence bounds. If all the errors equal one standard Gaussian, adding another copy leaves the maximum unchanged. If they are independent standard Gaussians, the expected maximum grows on the order of $\sqrt{\log p}$. The two families have the same marginal distributions. What distinguishes them is the size of their increments. Generic chaining uses these increments to decide which coordinates can represent one another and how much each approximation costs.
 
+For a finite nonempty family of vectors $a_t$ and a standard Gaussian vector $G$, [Theorem 2](#theorem-2) identifies the geometric quantity that controls the expected maximum. With $d_a(s,t)=\|a_s-a_t\|_2$, it gives
+
+$$
+\gamma_2(T,d_a)\;\asymp\;\mathbb{E}\max_{t\in T}\langle G,a_t\rangle.
+$$
+
+The constants in this comparison are universal. [Theorem 1](#theorem-1) treats processes whose increments have both Gaussian and exponential tails.
+
+## Theorem index
+
 For each result, the mathematical statement appears first. Open **Proof outline** to read the argument or **Lean statement** to see the type reported by Lean. The declaration name opens the full proof at the [checked revision](https://github.com/VC2015/generic-chaining/tree/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc). The **Uses** links identify selected supporting steps, including steps reached through intermediate lemmas.
 
 | Result | Lean declaration |
@@ -53,10 +63,10 @@ flowchart TD
 Throughout, $T$ is finite and nonempty. Write $M_0=1$ and $M_k=2^{2^k}$ for $k\ge1$. A sequence of nonempty nets $N_k\subseteq T$ is admissible if $|N_k|\le M_k$. For $\alpha=1,2$ define
 
 $$
-\gamma_\alpha(T,d)=\inf_{(N_k)\ {\mathrm{admissible}}}\max_{t\in T}\sum_{k\ge0}2^{k/\alpha}d(t,N_k),\qquad d(t,N_k)=\min_{s\in N_k}d(t,s).
+\gamma_\alpha(T,d)=\inf_{(N_k)\ {\mathrm{admissible}}}\max_{t\in T}\sum_{k\ge0}2^{k/\alpha}d(t,N_k).
 $$
 
-The distance $d$ may vanish at distinct indices. For the mixed-tail results write $w_k(s,t)=2^k d_1(s,t)+2^{k/2}d_2(s,t)$. For $a:T\to\mathbb{R}^r$ and $G\sim N(0,I_r)$, write $W(a)=\mathbb{E}\max_t\langle G,a_t\rangle$ and $d_a(s,t)=\|a_s-a_t\|_2$. The width uses the one-sided maximum.
+Here $d(t,N_k)=\min_{s\in N_k}d(t,s)$. The distance $d$ may vanish at distinct indices. For the mixed-tail results write $w_k(s,t)=2^k d_1(s,t)+2^{k/2}d_2(s,t)$. For $a:T\to\mathbb{R}^r$ and $G\sim N(0,I_r)$, write $W(a)=\mathbb{E}\max_t\langle G,a_t\rangle$ and $d_a(s,t)=\|a_s-a_t\|_2$. The width uses the one-sided maximum.
 
 ## Theorem 1
 
@@ -71,9 +81,11 @@ $$
 Then for each $t_0\in T$,
 
 $$
+\begin{aligned}
 \mathbb{E}\max_t|X_t-X_{t_0}|
- \le48\{\gamma_2(T,d_2)+\gamma_1(T,d_1)\}
- +2\max_t\mathbb{E}|X_t-X_{t_0}|.
+&\le 48\{\gamma_2(T,d_2)+\gamma_1(T,d_1)\}\\
+&\quad +2\max_t\mathbb{E}|X_t-X_{t_0}|.
+\end{aligned}
 $$
 
 **Lean.** [`GenericChaining.dirksen_expectation`](https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/GenericChaining/Dirksen.lean#L24)
@@ -202,8 +214,10 @@ GenericChaining.finite_chain_expectation.{u_1, u_2} {T : Type u_1} {Ω : Type u_
 There exist $C_{\mathrm{L}},C_{\mathrm{U}}>0$ such that for every $r\ge0$, every finite nonempty $T$ and every $a:T\to\mathbb{R}^r$,
 
 $$
-\gamma_2(T,d_a)\le C_{\mathrm{L}} W(a),\qquad
- W(a)\le C_{\mathrm{U}}\gamma_2(T,d_a).
+\begin{aligned}
+\gamma_2(T,d_a)&\le C_{\mathrm{L}}\,W(a),\\
+W(a)&\le C_{\mathrm{U}}\,\gamma_2(T,d_a).
+\end{aligned}
 $$
 
 One may take $C_{\mathrm{U}}=100$ and $C_{\mathrm{L}}=K_*/c_{\mathrm{g}}$, where $c_{\mathrm{g}}$ and $K_*$ are the constants used in [Lemma 5](#lemma-5) and [Lemma 6](#lemma-6).
@@ -265,7 +279,11 @@ GenericChaining.gaussianWidth_le_gamma2.{u_1} {T : Type u_1} [Fintype T] [Nonemp
 
 **Sudakov–Fernique comparison.** To prove the bound on the cost of the nets, we compare the given Gaussian family with one whose maximum we can estimate.
 
-Let $A:T\to\mathbb{R}^r$ and $B:T\to\mathbb{R}^s$. If $\|B_i-B_j\|_2^2\le\|A_i-A_j\|_2^2$ for all $i,j$, then $W(B)\le W(A)$.
+Let $A:T\to\mathbb{R}^r$ and $B:T\to\mathbb{R}^s$. If $\|B_i-B_j\|_2^2\le\|A_i-A_j\|_2^2$ for all $i,j$, then
+
+$$
+W(B)\le W(A).
+$$
 
 **Lean.** [`GenericChaining.gaussianWidth_mono_of_increment_le`](https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/GenericChaining/GaussianComparison.lean#L276)
 
@@ -466,6 +484,6 @@ The chaining inputs are proved in this repository. The signed-coordinate Bernste
 
 ## Sources and verification
 
-The finite first-moment result corresponds to [Dirksen, Theorem 3.5](https://doi.org/10.1214/EJP.v20-3760). The Gaussian equivalence follows [Talagrand’s majorizing-measure theorem](https://doi.org/10.1007/BF01896658), with the growth and partition argument described in [van Handel, Chapter 6](https://swh.princeton.edu/~rvan/migrated-to-math-2018-06-20/APC550.pdf). This presentation follows the [Brownian-motion blueprint](https://remydegenne.github.io/brownian-motion/blueprint/chap-kolmogorov_chentsov.html).
+The finite first-moment result corresponds to [Dirksen, Theorem 3.5](https://doi.org/10.1214/EJP.v20-3760). The Gaussian equivalence follows [Talagrand’s majorizing-measure theorem](https://doi.org/10.1007/BF01896658), with the growth and partition argument described in [van Handel, Chapter 6](https://swh.princeton.edu/~rvan/migrated-to-math-2018-06-20/APC550.pdf). For examples of how to follow a proof from its mathematical statement to its Lean source, see the [Polynomial Freiman–Ruzsa blueprint](https://teorth.github.io/pfr/blueprint/) and the [Brownian-motion blueprint](https://remydegenne.github.io/brownian-motion/blueprint/chap-kolmogorov_chentsov.html).
 
 The [PDF report](https://github.com/VC2015/generic-chaining/blob/main/docs/REPORT.pdf) gives the argument in reading order. The [companion Lean file](https://github.com/VC2015/generic-chaining/blob/main/docs/ReportStatements.lean) checks the numbered statements and numerical constants against the pinned implementation. Section 5 of the report gives the reproduction commands.

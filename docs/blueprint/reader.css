@@ -1,0 +1,78 @@
+/* The PFR blueprint uses the plasTeX white theme, a 25vw contents column
+   on desktop, Open Sans, and ruled theorem bodies. Preserve its geometry. */
+:root { --ink:#192d45; --blue:#164f90; --bar:#e2edfc; --rule:#91b2db; --pale:#f4f8ff; }
+body, h1, h2, h3, p, button, summary {font-family:"Open Sans","Helvetica Neue",Arial,sans-serif}
+body {color:var(--ink);height:100dvh}
+body > header {background:var(--bar);color:var(--ink)}
+h1, h2, #doc_title a, #doc_title a:visited {color:#163c70}
+#doc_title a {font-weight:400}
+a, a:visited {color:var(--blue)}
+button {color:var(--blue);cursor:pointer}
+:focus-visible {outline:2px solid #306eb6;outline-offset:2px}
+#toc-toggle {color:var(--blue);font-size:1.35rem;line-height:1;width:1.35rem;border:0;background:transparent;padding:0}
+nav.toc {border-color:#d5e3f5;background:var(--pale)}
+.toc ul li {background:transparent}
+.toc ul a {color:var(--blue)}
+.toc ul li.current,.toc ul a:hover {background:#e3eefc}
+body.nav-closed nav.toc {display:none}
+@media(min-width:1024px){nav.toc {width:25vw}}
+@media(max-width:1023px){body.nav-open nav.toc {display:flex;position:absolute;z-index:4;top:3rem;bottom:0;left:0;max-width:25ch;box-shadow:0 6px 15px #172f4d2b}}
+.toc ul .resource-links {border-top:1px solid #d5e3f5;margin-top:1rem;justify-content:flex-start}
+.toc ul .resource-links a {flex-grow:0;font-size:.9rem}
+.content, .content-wrapper, main {min-width:0}
+div.content-wrapper {width:100%;box-sizing:border-box;padding-bottom:3rem}
+.chapter[hidden] {display:none!important}
+.chapter > h1 {font-weight:400}
+.chapter p {margin:.48rem 0}
+#overview > h1,.byline {text-align:center}
+.byline {color:#435d7c;margin-bottom:1.3rem!important}
+#overview > h1 {margin-bottom:.4rem}
+.local_toc {margin-top:1.25rem}
+.local_toc a, .local_toc ul a {color:var(--blue)}
+.result {margin:1.2rem 0 1.6rem}
+.result h2.thmheading {display:flex;align-items:baseline;gap:.5rem;font-size:1rem;line-height:1.5;font-weight:700;color:var(--ink);margin:.5rem 0 .12rem}
+.thm-name {flex:1}
+.check {color:#185d9e}
+.tools {display:inline-flex;align-items:center;gap:.65rem}
+.tools button,.tools a {border:0;background:none;padding:0;font:inherit;color:var(--blue);text-decoration:none}
+.tools .lean-button {font-size:.88rem;letter-spacing:.02em}
+@media(hover:hover){.result:not(:hover):not(:focus-within) .tools {opacity:0}}
+.statement,.proof_content {margin-left:1rem;padding:.14rem 0 .14rem 1rem;border-left:.1rem solid var(--blue);min-width:0}
+section[id^="theorem-"] .statement {border-left-width:.15rem}
+.statement {font-style:italic}
+.statement p:first-child, .proof_content p:first-child {margin-top:0}
+.statement p:last-child,.proof_content p:last-child {margin-bottom:0}
+.proof {margin:.5rem 0 1rem}
+summary {cursor:pointer;color:var(--blue)}
+.proof > summary {display:block;font-weight:700;color:var(--ink);width:fit-content;list-style:none}
+.proof > summary::-webkit-details-marker {display:none}
+.proof > summary:after {content:' ▶';color:var(--blue);font-size:.75rem}
+.proof[open] > summary:after {content:' ▼'}
+.proof_content {margin-top:.3rem;border-left:.08rem solid var(--rule)}
+html.interactive .lean-source {display:none}
+#lean-dialog {width:min(48rem,88vw);max-height:80dvh;box-sizing:border-box;padding:0;border:1px solid var(--rule);border-radius:5px;color:var(--ink);box-shadow:0 7px 23px #132e5040}
+#lean-dialog::backdrop {background:#15243a70}
+#lean-dialog header {display:flex;align-items:center;justify-content:space-between;background:var(--bar);padding:.5rem .8rem}
+#lean-dialog header h2 {font-size:1.2rem;margin:0}
+#close-dialog {background:none;border:none;font-size:1.45rem}
+#dialog-body {padding:1rem;overflow-wrap:anywhere}
+#dialog-body p {margin:.6rem 0}
+pre {max-width:100%;overflow:auto;line-height:1.45;background:var(--pale);padding:.75rem;box-sizing:border-box}
+code {font-size:.83rem}
+#theorem-index table {width:100%;border-collapse:collapse;margin:1rem 0;text-align:left}
+#theorem-index td,#theorem-index th {padding:.44rem .55rem;border-bottom:1px solid #d6e2f2;overflow-wrap:anywhere;vertical-align:top}
+#theorem-index th {font-weight:700;background:var(--pale)}
+#theorem-index code {font-size:.76rem}
+.math.display {display:block;overflow-x:auto;overflow-y:hidden;padding:0 .1rem;text-align:center}
+.math.display mjx-container {min-width:max-content;margin:.85em auto!important}
+.math.inline {font-style:normal}
+mjx-container svg {max-width:none}
+.graph-plot {overflow:auto;margin:1.4rem 0}
+.graph-plot svg {display:block;width:100%;min-width:31rem;height:auto}
+.graph-plot a:hover path,.graph-plot a:focus path,.graph-plot a:hover ellipse,.graph-plot a:focus ellipse {stroke:#16569a;stroke-width:2}
+nav.prev_up_next {background:var(--bar);align-items:center}
+nav.prev_up_next a,nav.prev_up_next button {color:var(--blue)}
+nav.prev_up_next button {font-size:1.35rem;background:transparent;border:0;padding:.35rem .65rem}
+nav.prev_up_next a[aria-disabled=true] {opacity:.3;pointer-events:none}
+@media(max-width:600px){.math.display {font-size:.9em}.statement,.proof_content {margin-left:.45rem;padding-left:.65rem} #theorem-index td {padding:.35rem .2rem}}
+@media print {body,div.wrapper,div.content {display:block;height:auto;overflow:visible}body>header,nav,dialog,button,.tools {display:none!important}.chapter[hidden]{display:block!important}.chapter {break-before:page} .proof_content {display:block} }

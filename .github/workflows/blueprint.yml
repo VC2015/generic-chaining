@@ -1,0 +1,24 @@
+name: Blueprint
+on:
+  push:
+    branches: [main]
+    paths: ['docs/BLUEPRINT.*', 'docs/blueprint/**', '.github/workflows/blueprint.yml']
+  pull_request:
+    paths: ['docs/BLUEPRINT.*', 'docs/blueprint/**', '.github/workflows/blueprint.yml']
+permissions:
+  contents: read
+jobs:
+  reader:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --prefix docs/blueprint --ignore-scripts
+      - name: Check formulas and reader controls on desktop and mobile
+        run: CHROME_PATH="$(command -v google-chrome)" BLUEPRINT_SCREENSHOTS="$RUNNER_TEMP/screens" node docs/blueprint/test.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reader-screenshots
+          path: ${{ runner.temp }}/screens
