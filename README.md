@@ -1,6 +1,6 @@
 # Generic chaining in Lean
 
-[Read the proof blueprint](docs/BLUEPRINT.md) · [Download the mathematical report](docs/REPORT.pdf) · [LaTeX source](docs/REPORT.tex) · [Lean checks for the numbered statements](docs/ReportStatements.lean) · [Exact Lean statements](https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/CHECKED_THEOREMS.md) · [Audited proof revision](https://github.com/VC2015/generic-chaining/tree/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc)
+[Read the interactive blueprint on GitHub](docs/BLUEPRINT.md) · [View the PDF](docs/REPORT.pdf) · [Download the standalone HTML](https://github.com/VC2015/generic-chaining/blob/main/docs/BLUEPRINT.html?raw=true) · [LaTeX source](docs/REPORT.tex) · [Lean checks for the numbered statements](docs/ReportStatements.lean) · [Exact Lean statements](https://github.com/VC2015/generic-chaining/blob/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc/CHECKED_THEOREMS.md) · [Audited proof revision](https://github.com/VC2015/generic-chaining/tree/b0db8f333413b3d0fc9e1e20825dc7bd4d7019fc)
 
 The blueprint presents each result with its mathematical statement, proof outline, supporting lemmas, and the type printed by Lean. The report is by GPT-Sol 6.2, prompted by Victor Chernozhukov. It explains how the constructions fit together and identifies precisely which results of Dirksen, Talagrand, and van Handel they implement.
 
